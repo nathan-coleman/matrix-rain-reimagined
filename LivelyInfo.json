@@ -1,14 +1,14 @@
 {
-    "AppVersion": "1.0.0",
+    "AppVersion": "1.1.0",
     "Title": "Matrix Rain reimagined",
     "Thumbnail": "thumbnail.png",
     "Preview": "preview.gif",
-    "Desc": "Improved version of the original Matrix Rain, with lots of customization options.",
-    "Author": "Galib Jaman",
+    "Desc": "Customized Matrix Rain with lots of customization options.",
+    "Author": "Galib Jaman, Nathan Coleman",
     "License": "MIT License",
-    "Contact": "https://github.com/MrShadow03",
+    "Contact": "https://github.com/MrShadow03/Matrix-Rain-Reimagined",
     "Type": 1,
     "FileName": "matrix-rain-reimagined.html",
     "Arguments": "--pause-event true",
     "IsAbsolutePath": false
-  }
+}

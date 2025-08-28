@@ -1,11 +1,17 @@
 {
-    "textSize": {
+  "textSize": {
       "max": 64,
       "min": 14,
       "text": "Text Size",
       "type": "slider",
       "help": "Change the text size",
       "value": 14 
+    },
+    "fontFamily": {
+      "text": "Font Family",
+      "type": "textbox",
+      "help": "Change the font family",
+      "value": "Arial"
     },
     "fallingDelay": {
       "max": 150,
@@ -14,6 +20,14 @@
       "type": "slider",
       "help": "Change the speed of the rain",
       "value": 40 
+    },
+    "characterFade": {
+      "max": 100,
+      "min": 0,
+      "text": "Character Fade",
+      "type": "slider",
+      "help": "Change how fast characters fade",
+      "value": 10
     },
     "rainingCharacters": {
       "text" : "Raining Characters",
@@ -37,12 +51,6 @@
       "type": "color",
       "help": "Color of the special characters",
       "value": "#ff0000"
-    },
-    "fontFamily": {
-      "text": "Font Family",
-      "type": "textbox",
-      "help": "Change the font family",
-      "value": "Arial"
     },
     "isRainbowEnabled": {
       "text": "Enable Rainbow",
