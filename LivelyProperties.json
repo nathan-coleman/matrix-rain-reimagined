@@ -1,96 +1,77 @@
 {
-  "textSize": {
+  "fontSize": {
       "max": 64,
       "min": 14,
-      "text": "Text Size",
+      "text": "Font Size",
       "type": "slider",
       "help": "Change the text size",
-      "value": 14 
+      "value": 14
     },
     "fontFamily": {
       "text": "Font Family",
       "type": "textbox",
       "help": "Change the font family",
-      "value": "Arial"
+      "value": "Courier New"
     },
-    "fallingDelay": {
-      "max": 150,
+    "minDelay": {
+      "max": 10,
       "min": 1,
-      "text": "Falling Delay (ms)",
+      "text": "Minimum Falling Delay",
       "type": "slider",
-      "help": "Change the speed of the rain",
-      "value": 40 
+      "help": "Change how fast characters drops fall",
+      "value": 1
     },
-    "characterFade": {
-      "max": 100,
-      "min": 0,
-      "text": "Character Fade",
+    "maxDelay": {
+      "max": 20,
+      "min": 2,
+      "text": "Maximum Falling Delay",
+      "type": "slider",
+      "help": "Change how fast characters drops fall",
+      "value": 6
+    },
+    "tailLength": {
+      "max": 20,
+      "min": 1,
+      "text": "How long a drop is",
       "type": "slider",
       "help": "Change how fast characters fade",
-      "value": 10
-    },
-    "rainingCharacters": {
-      "text" : "Raining Characters",
-      "type" : "textbox",
-      "help" : "Enter the characters you want to rain down",
-      "value" : "ネバーゴナーギブユーアップ1234"
-    },
-    "rainingCharactersColor": {
-      "text": "Primary Color",
-      "type": "color",
-      "value": "#00ff00"
+      "value": 6
     },
     "specialCharacters": {
       "text" : "Special Characters",
       "type" : "textbox",
       "help" : "These characters must be in the raining characters list",
-      "value" : "ッ12"
+      "value" : "・Zﾆﾇ"
     },
-    "specialCharactersColor": {
+    "primaryColor": {
+      "text": "Primary Color",
+      "type": "color",
+      "value": "#00ff00"
+    },
+    "secondaryColor": {
       "text": "Special Character Color",
       "type": "color",
       "help": "Color of the special characters",
       "value": "#ff0000"
+    },
+    "glowColor": {
+      "text": "Character Glow Color",
+      "type": "color",
+      "help": "Color character glow",
+      "value": "#ffffff"
+    },
+    "glowRadius": {
+      "max": 20,
+      "min": 0,
+      "text": "Glow Radius",
+      "type": "slider",
+      "help": "Size of character glow",
+      "value": 6
     },
     "isRainbowEnabled": {
       "text": "Enable Rainbow",
       "type": "checkbox",
       "help": "Enable rainbow effect",
       "value": false
-    },
-    "color1": {
-      "text": "Color 1",
-      "type": "color",
-      "value": "#ff0000"
-    },
-    "color2": {
-      "text": "Color 2",
-      "type": "color",
-      "value": "#ff7f00"
-    },
-    "color3": {
-      "text": "Color 3",
-      "type": "color",
-      "value": "#ffff00"
-    },
-    "color4": {
-      "text": "Color 4",
-      "type": "color",
-      "value": "#00ff00"
-    },
-    "color5": {
-      "text": "Color 5",
-      "type": "color",
-      "value": "#0000ff"
-    },
-    "color6": {
-      "text": "Color 6",
-      "type": "color",
-      "value": "#4b0082"
-    },
-    "color7": {
-      "text": "Color 7",
-      "type": "color",
-      "value": "#9400d3"
     }
   }

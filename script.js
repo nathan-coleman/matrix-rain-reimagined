@@ -1,132 +1,189 @@
+var _fontSize = 16;
+var _fontFamily = "Courier New";
+var _minDelay = 1;
+var _maxDelay = 6;
+var _tailLength = 10;
+
+var _specialCharacters = "・Zﾆﾇ".split("");
+var _primaryColor = "#00ff00";
+var _secondaryColor = "#ff0000";
+var _backgroundColor = "#000000";
+var _glowColor = "#ffffff";
+var _glowRadius = 6;
+var _isRainbowEnabled = false;
+
+var _katakanaChars = "ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇｲｸｺｿﾁﾄﾉﾌﾔﾖﾙﾚﾛﾝ"
+var _latinChars = "012345789Z"
+var _otherChars = ":・.\"=*+-<></>¦｜ç"
+var _characters = (_katakanaChars + _latinChars + _otherChars).split("");
+var _rainbowColors = ["#ff0000", "#ff7f00", "#ffff00", "#00ff00", "#0000ff", "#4b0082", "#9400d3"];
+
+var _columns = 0;
+var _rows = 0;
+var _grid = [];
+var _columnSettings = [];
+var _timeoutId = 0;
+var _frameNumber = 0;
+
+var _canvas = document.querySelector("canvas");
+var _renderContext = _canvas.getContext("2d");
+
 function livelyPropertyListener(inputName, input) {
     switch (inputName) {
-        case "textSize":
-            fontSize = input;
-            columns = canvas.width / fontSize;
+        case "fontSize":
+            _fontSize = Math.max(1, parseInt(input) || _fontSize);
+            _renderContext.font = "bold " + _fontSize + "px " + _fontFamily;
+            initializeGrid();
             break;
         case "fontFamily":
-            font = input;
+            _fontFamily = input || _fontFamily;
+            _renderContext.font = "bold " + _fontSize + "px " + _fontFamily;
             break;
-        case "fallingDelay":
-            delay = input;
-            if (timeoutId != 0)
-            {
-                clearTimeout(timeoutId);
-                draw();
-            }
+        case "minDelay":
+            _minDelay = Math.max(1, parseInt(input) || _minDelay);
             break;
-        case "characterFade":
-            characterFade = input / 100.0;
+        case "maxDelay":
+            _maxDelay = Math.max(1, parseInt(input) || _maxDelay);
             break;
-        case "rainingCharacters":
-            letters = input.split("");
-            break;
-        case "rainingCharactersColor":
-            primaryColor = input;
+        case "tailLength":
+            _tailLength = Math.max(1, parseInt(input) || _tailLength);
             break;
         case "specialCharacters":
-            specialLetters = input.split("");
+            _specialCharacters = (input || "").split("");
             break;
-        case "specialCharactersColor":
-            secondaryColor = input;
+        case "primaryColor":
+            _primaryColor = input || _primaryColor;
+            break;
+        case "secondaryColor":
+            _secondaryColor = input || _secondaryColor;
+            break;
+        case "backgroundColor":
+            _backgroundColor = input || _backgroundColor;
+            break;
+        case "glowColor":
+            _glowColor = input || _glowColor;
+            _renderContext.shadowColor = _glowColor;
+            break;
+        case "glowRadius":
+            _glowRadius = Math.max(1, parseFloat(input) || _glowRadius);
+            _renderContext.shadowBlur = _glowRadius;
             break;
         case "isRainbowEnabled":
-            isRainbowEnabled = input;
+            _isRainbowEnabled = !!input;
             break;
-        case "color1":
-            rainbowColors[0] = input;
-            break;
-        case "color2":
-            rainbowColors[1] = input;
-            break;
-        case "color3":
-            rainbowColors[2] = input;
-            break;
-        case "color4":
-            rainbowColors[3] = input;
-            break;
-        case "color5":
-            rainbowColors[4] = input;
-            break;
-        case "color6":
-            rainbowColors[5] = input;
-            break;
-        case "color7":
-            rainbowColors[6] = input
     }
+}
+
+function initializeGrid() {
+    _canvas.width = window.innerWidth;
+    _canvas.height = window.innerHeight;
+    _renderContext.textBaseline = "top";
+    _renderContext.font = "bold " + _fontSize + "px " + _fontFamily;
+    _renderContext.shadowColor = _glowColor;
+    _renderContext.shadowBlur = _glowRadius;
+
+    _columns = Math.floor(_canvas.width / _fontSize);
+    _rows = Math.ceil(_canvas.height / _fontSize);
+
+    _grid = new Array(_columns);
+    _columnSettings = new Array(_columns);
+
+    for (var columnIndex = 0; columnIndex < _columns; columnIndex++) {
+        var column = new Array(_rows);
+        for (var rowIndex = 0; rowIndex < _rows; rowIndex++) {
+            column[rowIndex] = createCell(rowIndex === 0);
+        }
+        _grid[columnIndex] = column;
+        _columnSettings[columnIndex] = createColumnSettings()
+    }
+}
+
+function createColumnSettings() {
+    return {
+        delay: _minDelay + Math.random() * (_maxDelay - _minDelay),
+        delayOffset: Math.random() * 10
+    };
+}
+
+function createCell(isTip) {
+    var character = getRandomChar();
+    return {
+        char: character,
+        isTip: !!isTip,
+        fade: isTip ? 1 : 0,
+        color: pickGlyphColor(character)
+    };
+}
+
+function getRandomChar() {
+    var index = Math.floor(Math.random() * _characters.length);
+    return _characters[index];
+}
+
+function pickGlyphColor(char) {
+    if (_isRainbowEnabled) {
+        var index = Math.floor(Math.random() * _rainbowColors.length);
+        return _rainbowColors[index];
+    }
+
+    return _specialCharacters.includes(char) ? _secondaryColor : _primaryColor;
 }
 
 function draw() {
-    renderContext.fillStyle = "rgba(0, 0, 0, " + characterFade + ")";
-    renderContext.fillRect(0, 0, canvas.width, canvas.height);
+    _frameNumber++;
 
-    for (var i = 0; i < drops.length; i++) {
-        var char = letters[Math.floor(Math.random() * letters.length)];
-        char = char || "v";
-    
-        if (isRainbowEnabled)
-        {
-            renderContext.fillStyle = rainbowColors[rainbowIndex];
-            rainbowIndex = (rainbowIndex + 1) % rainbowColors.length;
-        }
-        else if (specialLetters.includes(char))
-        {
-            renderContext.fillStyle = secondaryColor;
-        }
-        else 
-        {
-            renderContext.fillStyle = primaryColor;
-        }
+    _renderContext.fillStyle = _backgroundColor;
+    _renderContext.fillRect(0, 0, _canvas.width, _canvas.height);
 
-        renderContext.font = fontSize + "px " + font;
-        renderContext.fillText(char, i * fontSize, drops[i] * fontSize);
-        drops[i]++;
-
-        if (drops[i] * fontSize > canvas.height && Math.random() > .95)
-        {
-            drops[i] = 0;
-        }
+    for (var columnIndex = 0; columnIndex < _columns; columnIndex++) {
+        advanceColumn(columnIndex);
+        paintColumn(columnIndex);
     }
-    timeoutId = setTimeout(draw, parseInt(delay))
+
+    _timeoutId = setTimeout(draw, 20);
 }
 
-// Set up canvas
-var canvas = document.querySelector("canvas");
-var renderContext = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+function advanceColumn(columnIndex) {
+    var column = _grid[columnIndex];
+    var settings = _columnSettings[columnIndex];
+    
+    var tipRow = 0;
+    for (var rowIndex = 0; rowIndex < _rows; rowIndex++) {
+        var cell = column[rowIndex];
+        
+        if (cell.isTip) {
+            tipRow = rowIndex;
+        }
 
-// Declare defaults
-var fontSize = 16;
-var columns = canvas.width / fontSize;
-var font = "Arial";
-var delay = 40;
-var characterFade = 0.1;
+        cell.fade = Math.max(0, cell.fade - (1 / _tailLength / settings.delay));
+    }
+    
+    if (Math.floor((_frameNumber + settings.delay) % settings.delay) !== 0) return;
 
-var kanjiChars = "日"
-var katakanaChars = "ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇ"
-var missingKatakanaChars = "ｦｲｸｺｿﾁﾄﾉﾌﾔﾖﾙﾚﾛﾝ"
-var digitChars = "012345789"
-var romanChars = "Z"
-var punctuationChars = ":・.\"=*+-<></>"
-var otherChars = "¦｜ç"
+    column[tipRow].isTip = false;
+    tipRow++;
+    if (tipRow >= _rows) {
+        tipRow = 0;
+        _columnSettings[columnIndex] = createColumnSettings()
+    }
 
-var letters = (kanjiChars + katakanaChars + missingKatakanaChars + digitChars + romanChars + punctuationChars + otherChars).split("");
-var specialLetters = "日・Zﾆﾇ".split("");
-var primaryColor = "#00ff00";
-var secondaryColor = "#ff0000";
-var backgroundColor = "#0fff00";
-var isRainbowEnabled = false;
-var rainbowColors = ["#ff0000", "#ff7f00", "#ffff00", "#00ff00", "#0000ff", "#4b0082", "#9400d3"];
-
-// Create drops
-var drops = []
-for (var i = 0; i < columns; i++)
-{
-    drops[i] = 1;
+    column[tipRow] = createCell(true);
 }
-var timeoutId;
-var rainbowIndex = 0;
 
-// Finally, begin the drawing loop
+function paintColumn(columnIndex) {
+    var column = _grid[columnIndex];
+    var xPos = columnIndex * _fontSize;
+    
+    for (var rowIndex = 0; rowIndex < _rows; rowIndex++) {
+        var cell = column[rowIndex];
+        var yPos = rowIndex * _fontSize;
+        
+        _renderContext.fillStyle = cell.color + Math.floor(cell.fade * 255).toString(16).padStart(2, "0");
+        _renderContext.fillText(cell.char, xPos, yPos);
+    }
+}
+
+window.addEventListener("resize", initializeGrid);
+
+initializeGrid();
 draw();
